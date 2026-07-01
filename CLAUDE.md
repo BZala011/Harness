@@ -53,6 +53,26 @@ java -jar target/hello-world-1.0.0.jar   # run the app
 - `private static final` constants in `UPPER_SNAKE_CASE`.
 - No raw `System.out.println` in non-`App` classes — use `AppLogger`.
 
+## Automation & Approval Policy
+
+Standing authorization (decided 2026-07-01) — Claude does **not** need to ask for confirmation before:
+
+- Committing code changes on a feature branch.
+- Pushing that branch to origin.
+- Opening a Pull Request against `main`.
+- Merging that PR into `main`, once CI checks (build, tests, Checkstyle) pass.
+
+This applies to routine feature/fix work following the guidelines above. It does **not** cover:
+
+- Force-pushes, history rewrites, or branch deletion — always confirm first.
+- Any production deployment — this repo has no prod pipeline today, but if one is added, deploys always
+  require an explicit human approval step; never wire automation to auto-deploy to prod.
+- Changes to the files listed under "Files Claude Should NOT Modify Without Asking" above.
+
+If the `gh` CLI is not installed/authenticated in the environment, PR creation and merge cannot be done via
+automation — fall back to pushing the branch and handing the user a compare URL
+(`https://github.com/<owner>/<repo>/compare/<branch>`) to open manually.
+
 ## Commit Message Format
 
 ```

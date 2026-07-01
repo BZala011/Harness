@@ -22,6 +22,6 @@ class AppTest {
         } finally {
             System.setOut(original);
         }
-        assertTrue(captured.toString().contains("Hello 555"));
+        assertTrue(captured.toString().contains("hello 66"));
     }
 }

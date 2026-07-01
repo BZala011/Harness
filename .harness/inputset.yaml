@@ -1,0 +1,14 @@
+inputSet:
+  name: default-input-set
+  identifier: default_input_set
+  orgIdentifier: default
+  projectIdentifier: HelloWorld
+  pipeline:
+    identifier: hello_world_pipeline
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main

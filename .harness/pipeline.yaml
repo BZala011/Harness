@@ -1,0 +1,98 @@
+pipeline:
+  name: hello-world-pipeline
+  identifier: hello_world_pipeline
+  orgIdentifier: default
+  projectIdentifier: HelloWorld
+  tags:
+    language: java
+    app: hello-world
+
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.GitHubConnector
+        repoName: BZala011/Harness
+        build: <+input>
+
+  stages:
+    # ── Stage 1: Build & Test ───────────────────────────────────────────────
+    - stage:
+        name: Build and Test
+        identifier: Build_and_Test
+        type: CI
+        spec:
+          cloneCodebase: true
+
+          platform:
+            os: Linux
+            arch: Amd64
+
+          runtime:
+            type: Cloud
+            spec: {}
+
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Compile
+                  identifier: Compile
+                  spec:
+                    image: maven:3.9-eclipse-temurin-17
+                    command: |
+                      echo "Java version:"
+                      java -version
+                      echo "Maven version:"
+                      mvn --version
+                      mvn --batch-mode compile
+
+              - step:
+                  type: Run
+                  name: Unit Tests
+                  identifier: Unit_Tests
+                  spec:
+                    image: maven:3.9-eclipse-temurin-17
+                    command: mvn --batch-mode test
+                  reports:
+                    type: JUnit
+                    spec:
+                      paths:
+                        - "**/target/surefire-reports/*.xml"
+
+              - step:
+                  type: Run
+                  name: Checkstyle
+                  identifier: Checkstyle
+                  spec:
+                    image: maven:3.9-eclipse-temurin-17
+                    command: mvn --batch-mode checkstyle:check
+
+              - step:
+                  type: Run
+                  name: Package
+                  identifier: Package
+                  spec:
+                    image: maven:3.9-eclipse-temurin-17
+                    command: |
+                      mvn --batch-mode package -DskipTests
+                      echo "Artefact produced:"
+                      ls -lh target/*.jar
+
+              - step:
+                  type: SaveCacheS3
+                  name: Cache Maven Dependencies
+                  identifier: Cache_Maven_Dependencies
+                  spec:
+                    connectorRef: account.AwsConnector
+                    region: us-east-1
+                    bucket: harness-cache-bucket
+                    key: maven-{{ checksum "pom.xml" }}
+                    sourcePaths:
+                      - /root/.m2/repository
+                  when:
+                    stageStatus: Success
+
+          caching:
+            enabled: true
+            paths:
+              - /root/.m2/repository

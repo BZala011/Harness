@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Default greeting changed from "Hello everyone" to "Hello 11111"
 - Default greeting reverted from "Hello World!!" back to "Hello everyone"
 - Default greeting updated from "Hello everyone" to "Hello 44"
 - Pipeline hardened with additional automated quality gates: code coverage

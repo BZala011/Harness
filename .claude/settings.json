@@ -1,0 +1,52 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch)",
+      "Bash(git branch -a)",
+      "Bash(git branch --show-current)",
+      "Bash(git checkout main)",
+      "Bash(git checkout -b *)",
+      "Bash(git pull*)",
+      "Bash(git add *)",
+      "Bash(git commit -m *)",
+      "Bash(git push -u origin *)",
+      "Bash(git push origin *)",
+      "Bash(mvn test)",
+      "Bash(mvn -q test)",
+      "Bash(mvn --batch-mode test)",
+      "Bash(mvn --batch-mode compile)",
+      "Bash(mvn verify)",
+      "Bash(mvn -q verify)",
+      "Bash(mvn clean verify)",
+      "Bash(mvn -q clean verify)",
+      "Bash(mvn checkstyle:check)",
+      "Bash(mvn --batch-mode checkstyle:check)",
+      "Bash(mvn jacoco:check)",
+      "Bash(mvn jacoco:report)",
+      "Bash(mvn --batch-mode jacoco:check)",
+      "Bash(mvn --batch-mode jacoco:report)",
+      "Bash(gh auth status)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr view*)",
+      "Bash(gh pr merge *)"
+    ],
+    "ask": [
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git branch -D*)",
+      "Bash(git branch --delete --force*)",
+      "Bash(git checkout -- *)",
+      "Bash(git checkout .)",
+      "Bash(git commit --amend*)",
+      "Bash(git rebase*)",
+      "Bash(gh pr merge --admin*)",
+      "Bash(rm -rf*)"
+    ]
+  }
+}

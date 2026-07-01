@@ -9,7 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Default greeting changed from "Hello everyone" to "Hello World!!"
+- Pipeline hardened with additional automated quality gates: code coverage
+  enforcement (JaCoCo, 60% line minimum), dependency vulnerability scanning
+  (OWASP Dependency-Check), and secret detection (Gitleaks)
+
+### Fixed
+
+- `checkstyle.xml` moved `LineLength` from `TreeWalker` to `Checker` scope —
+  the prior nesting is rejected by the Checkstyle version resolved by
+  `maven-checkstyle-plugin` and caused `mvn verify` to fail unconditionally
 
 ## [1.0.0] – 2026-07-01
 

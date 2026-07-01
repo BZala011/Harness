@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Default greeting reverted from "Hello World!!" back to "Hello everyone"
+- Default greeting updated from "Hello everyone" to "Hello 44"
 - Pipeline hardened with additional automated quality gates: code coverage
   enforcement (JaCoCo, 60% line minimum), dependency vulnerability scanning
   (OWASP Dependency-Check), and secret detection (Gitleaks)

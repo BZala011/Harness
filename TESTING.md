@@ -34,7 +34,7 @@ mvn test -Dtest=HelloWorldTest#defaultGreeting
 | Class | Tests |
 |-------|-------|
 | `HelloWorld` | default greeting, named greeting, null fallback, blank fallback, trim |
-| `App` | main() prints "Hello, World!" to stdout |
+| `App` | main() prints "Hello World!!" to stdout |
 
 ## Adding Tests
 

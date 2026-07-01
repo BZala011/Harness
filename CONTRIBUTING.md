@@ -80,3 +80,13 @@ Use the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md).
 ## Review Process
 
 A maintainer will review your PR within 3 business days. Feedback may be requested before merging.
+
+## Automated Workflow (AI Agents)
+
+Claude Code agents working in this repo may run the `/ship` slash command
+(`.claude/commands/ship.md`) to validate, commit, push, open/update a PR, and enable
+auto-merge without waiting for human review — see `CLAUDE.md`'s "Automation & Approval
+Policy" and `AGENTS.md` for the exact scope and hard limits (no force-push, no direct pushes
+to `main`, no auto-deploy to production). This does not change the human review process
+above; it only means an agent-authored PR can merge as soon as CI passes if no human
+reviews it first.

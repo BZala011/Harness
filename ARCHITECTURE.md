@@ -63,7 +63,7 @@ Each class has one reason to change:
 ## CI/CD Architecture
 
 ```
-Developer Push
+Developer/Agent Push
       │
       ▼
 GitHub (source of truth)
@@ -75,5 +75,11 @@ GitHub (source of truth)
                 ├── Compile
                 ├── Test
                 ├── Checkstyle
+                ├── Code Coverage Gate (JaCoCo, 60% line minimum)
+                ├── Secret Detection (Gitleaks)
+                ├── Dependency Vulnerability Scan (OWASP Dependency-Check)
                 └── Package → Artefact
+                        │
+                        ▼
+        all required checks pass → GitHub auto-merge fires (see CLAUDE.md)
 ```

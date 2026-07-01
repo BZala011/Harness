@@ -34,7 +34,7 @@ mvn test -Dtest=HelloWorldTest#defaultGreeting
 | Class | Tests |
 |-------|-------|
 | `HelloWorld` | default greeting, named greeting, null fallback, blank fallback, trim |
-| `App` | main() prints "Hello everyone" to stdout |
+| `App` | main() prints the default greeting to stdout |
 
 ## Adding Tests
 
@@ -51,4 +51,3 @@ Tests run automatically in the Harness pipeline on every push. A failing test bl
 
 - Integration tests with Testcontainers (when external dependencies are added).
 - Mutation testing with PIT (`org.pitest:pitest-maven`).
-- OWASP Dependency-Check as a verify step.

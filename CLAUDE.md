@@ -62,6 +62,25 @@ Types: feat | fix | docs | style | refactor | test | chore
 Example: feat(greeting): add multi-language support
 ```
 
+## Automation & Approval Policy
+
+The `/ship` command (`.claude/commands/ship.md`) runs the full autonomous flow: validate
+(`mvn clean verify`) → AI code review (`/code-review`) → commit → push → create/update PR →
+enable GitHub auto-merge. Once invoked, the following are **pre-authorized** — do not pause
+to ask for confirmation on these for routine feature/fix work:
+
+- Committing with a Conventional Commit message.
+- Pushing the current feature branch.
+- Creating or updating the Pull Request.
+- Enabling auto-merge so the PR merges as soon as required CI checks pass.
+
+**Always still confirm before:** force-push, history rewrite, branch deletion, or any change
+to `.harness/pipeline.yaml` / `pom.xml` outside the `/ship` command's own setup.
+
+**Production deployment always requires a human approval step.** This repo has no prod
+pipeline/environment today, so the constraint is currently moot — but if one is added later,
+never wire it to auto-deploy.
+
 ## Relationship to Other Agent Docs
 
 - [`AGENTS.md`](AGENTS.md) — describes the human/AI roles in this project

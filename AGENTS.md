@@ -19,7 +19,14 @@ This document describes the roles of human contributors and AI agents in this pr
 - Implement feature code and tests on request.
 - Refactor within existing package boundaries.
 - Generate documentation updates when code changes.
-- **Must not** autonomously push to `main` or modify pipeline YAML without human review.
+- May run the `/ship` workflow autonomously: commit, push a feature branch, open/update a
+  Pull Request, and enable auto-merge once CI + AI review pass — see CLAUDE.md's
+  "Automation & Approval Policy" for the exact pre-authorized scope.
+- **Must not** push directly to `main`, force-push, rewrite history, delete branches, or
+  modify `.harness/pipeline.yaml` / `pom.xml` outside of an explicitly-approved task, without
+  asking first.
+- **Must not** auto-deploy to production — no such stage exists today, and if one is added it
+  always requires human approval.
 
 ### Harness CI Agent (Automated Pipeline)
 
@@ -39,21 +46,28 @@ This document describes the roles of human contributors and AI agents in this pr
 ## Workflow
 
 ```
-Developer  ──► feature branch  ──► Pull Request
-                                        │
-                             GitHub Actions (PR validation)
-                                        │
-                             Harness CI  (full pipeline)
-                                        │
-                    ◄── review + approve ──────────────────
-                                        │
-                              merge to main
-                                        │
+Developer/Agent ──► feature branch ──► /ship (commit, push, open PR, enable auto-merge)
+                                              │
+                                   GitHub Actions (PR validation)
+                                              │
+                                   Harness CI  (full pipeline)
+                                              │
+                             all required checks pass?
+                                     │              │
+                                   yes             no ──► PR blocked, fix and re-run /ship
+                                     │
+                                merge to main (automatic, no human click required)
+                                     │
                              Harness CI  (main build)
 ```
 
+Human-authored PRs are unaffected by this — a maintainer can still review and merge manually
+at any point; auto-merge only fires if the PR is still open and unreviewed when checks pass.
+
 ## AI Agent Guardrails
 
-- AI agents operate on **feature branches only** unless explicitly authorised.
+- AI agents operate on **feature branches only** — never commit or push directly to `main`.
 - Secrets referenced in `.env.example` must never be committed; agents should read from environment variables or Harness secrets.
-- Pipeline YAML modifications require a human review step before merge.
+- Commit, push, PR create/update, and merge-to-`main` are pre-authorized for routine work via
+  `/ship` (see `CLAUDE.md`). Pipeline YAML / `pom.xml` modifications outside that command's own
+  setup still require an explicit human ask, as does anything auto-deploying to production.

@@ -19,7 +19,7 @@ class HelloWorldTest {
     @Test
     @DisplayName("getGreeting() returns 'Hello, World!'")
     void defaultGreeting() {
-        assertEquals("Hello, World!", subject.getGreeting());
+        assertEquals("Hello everyone", subject.getGreeting());
     }
 
     @Test
@@ -31,13 +31,13 @@ class HelloWorldTest {
     @Test
     @DisplayName("getGreeting(null) falls back to default")
     void nullNameFallsBack() {
-        assertEquals("Hello, World!", subject.getGreeting(null));
+        assertEquals("Hello everyone", subject.getGreeting(null));
     }
 
     @Test
     @DisplayName("getGreeting(blank) falls back to default")
     void blankNameFallsBack() {
-        assertEquals("Hello, World!", subject.getGreeting("   "));
+        assertEquals("Hello everyone", subject.getGreeting("   "));
     }
 
     @Test

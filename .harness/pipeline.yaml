@@ -69,6 +69,59 @@ pipeline:
 
               - step:
                   type: Run
+                  name: Code Coverage Gate
+                  identifier: Code_Coverage_Gate
+                  spec:
+                    image: maven:3.9-eclipse-temurin-17
+                    command: mvn --batch-mode jacoco:check
+
+              - step:
+                  type: Run
+                  name: Secret Detection
+                  identifier: Secret_Detection
+                  spec:
+                    image: zricethezav/gitleaks:latest
+                    shell: Sh
+                    command: gitleaks detect --source=. --no-git -v --exit-code 1
+
+              - step:
+                  type: RestoreCacheS3
+                  name: Restore Dependency-Check Data
+                  identifier: Restore_Dependency_Check_Data
+                  spec:
+                    connectorRef: account.AwsConnector
+                    region: us-east-1
+                    bucket: harness-cache-bucket
+                    key: owasp-dc-data-v1
+
+              - step:
+                  type: Run
+                  name: Dependency Vulnerability Scan
+                  identifier: Dependency_Vulnerability_Scan
+                  spec:
+                    image: maven:3.9-eclipse-temurin-17
+                    envVariables:
+                      NVD_API_KEY: <+secrets.getValue("nvd_api_key")>
+                    command: |
+                      mvn --batch-mode org.owasp:dependency-check-maven:check \
+                        -DdataDirectory=/root/.m2/dependency-check-data
+
+              - step:
+                  type: SaveCacheS3
+                  name: Cache Dependency-Check Data
+                  identifier: Cache_Dependency_Check_Data
+                  spec:
+                    connectorRef: account.AwsConnector
+                    region: us-east-1
+                    bucket: harness-cache-bucket
+                    key: owasp-dc-data-v1
+                    sourcePaths:
+                      - /root/.m2/dependency-check-data
+                  when:
+                    stageStatus: Success
+
+              - step:
+                  type: Run
                   name: Package
                   identifier: Package
                   spec:

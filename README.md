@@ -132,7 +132,7 @@ Expected output:
 
 ```
 [2026-07-01 10:00:00] [INFO ] [com.harness.helloworld.App] Application starting
-Hello, World!
+Hello World!!
 [2026-07-01 10:00:00] [INFO ] [com.harness.helloworld.App] Application completed successfully
 ```
 

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AppTest {
 
     @Test
-    @DisplayName("main() prints 'Hi, whatsapp...' to stdout")
+    @DisplayName("main() prints 'Hello everyone..' to stdout")
     void mainPrintsGreeting() {
         ByteArrayOutputStream captured = new ByteArrayOutputStream();
         PrintStream original = System.out;
@@ -22,6 +22,6 @@ class AppTest {
         } finally {
             System.setOut(original);
         }
-        assertTrue(captured.toString().contains("Hi, whatsapp..."));
+        assertTrue(captured.toString().contains("Hello everyone.."));
     }
 }

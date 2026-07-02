@@ -106,3 +106,8 @@ never wire it to auto-deploy.
 - [`AGENTS.md`](AGENTS.md) — describes the human/AI roles in this project
 - [`CONTEXT.md`](CONTEXT.md) — architecture decisions and assumptions
 - [`TESTING.md`](TESTING.md) — testing strategy details
+- [`HARNESS.md`](HARNESS.md) — the autonomous workflow step sequence (intent); `/ship` is the
+  concrete implementation
+- [`GIT_WORKFLOW.md`](GIT_WORKFLOW.md) — git branching/commit/PR/merge mechanics
+- [`docs/coding-standards.md`](docs/coding-standards.md) — `checkstyle.xml` rules explained in
+  plain language

@@ -3,6 +3,13 @@ description: Implement a task end-to-end -- branch, code, test, commit, push, PR
 argument-hint: <task description>
 ---
 
+> **Autonomous trigger:** steps 3-6 of this pipeline (validate, commit, push, open/update PR, auto-merge) also
+> run automatically without typing `/ship`. `.claude/hooks/auto-ship-stop.ps1` fires as a `Stop` hook whenever
+> a turn ends with unshipped work (uncommitted changes or unpushed commits) on a non-`main` branch, and blocks
+> the stop with an instruction to finish shipping. Invoking `/ship` explicitly is still the right move to kick
+> off a brand-new task (step 1: branch creation, step 2: implementation) -- the hook only picks up from
+> "there's a diff sitting here," it doesn't decide what to build.
+
 Task: $ARGUMENTS
 
 Follow this repo's conventions in `CLAUDE.md` throughout (package structure, style, changelog, commit format,

@@ -48,5 +48,19 @@
       "Bash(gh pr merge --admin*)",
       "Bash(rm -rf*)"
     ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \".claude/hooks/auto-ship-stop.ps1\"",
+            "timeout": 30,
+            "statusMessage": "Checking for unshipped work..."
+          }
+        ]
+      }
+    ]
   }
 }

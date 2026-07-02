@@ -30,5 +30,12 @@ You will receive an acknowledgement within 48 hours and a resolution timeline wi
 
 This is a demo application with no network exposure or persistent data. The primary security concerns are:
 
-- Dependency vulnerabilities (addressed via OWASP Dependency-Check, to be added in a future release).
+- Dependency vulnerabilities (addressed via OWASP Dependency-Check, `failBuildOnCVSS=7`, in the Harness pipeline).
+- Secret leaks in the working tree (addressed via Gitleaks in the Harness pipeline).
 - Misconfigured CI secrets (addressed by Harness secret management).
+
+## Auto-Merge Gate
+
+PRs merged via the `/ship` automation (see `CLAUDE.md`) cannot bypass these checks — GitHub
+auto-merge only fires once the required CI status checks, including Checkstyle, the JaCoCo
+coverage gate, OWASP Dependency-Check, and Gitleaks, report success.

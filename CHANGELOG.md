@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/ship` slash command (`.claude/commands/ship.md`): autonomous validate → AI code review →
+  commit → push → create/update PR → enable GitHub auto-merge workflow
+- "Automation & Approval Policy" section in `CLAUDE.md` documenting what's pre-authorized
+  (commit/push/PR/merge) vs. what always needs a human ask (force-push, history rewrite,
+  branch deletion, pipeline/pom changes outside `/ship` setup, prod deploy)
+- Documentation updated across `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, `ARCHITECTURE.md`,
+  and `README.md` to describe the autonomous ship workflow and its guardrails
+
 ### Changed
 
 - Default greeting changed from "Hello everyone" to "Hello 11111"
@@ -14,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default greeting updated from "Hello everyone" to "Hello 44"
 - Default greeting updated from "Hello 44" to "Hello 555"
 - Default greeting updated from "Hello 555" to "hello 66"
+- Default greeting updated from "hello 66" to "Hello World!!!"
+- Default greeting updated from "Hello World!!!" to "Hello 77 "
+- Default greeting updated from "Hello 77 " to "Hi, everyone"
 - Pipeline hardened with additional automated quality gates: code coverage
   enforcement (JaCoCo, 60% line minimum), dependency vulnerability scanning
   (OWASP Dependency-Check), and secret detection (Gitleaks)

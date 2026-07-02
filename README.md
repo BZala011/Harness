@@ -52,6 +52,9 @@ This project provides a minimal but **production-quality** skeleton for a Java a
 
 ```
 .
+├── .claude/
+│   └── commands/
+│       └── ship.md             # Autonomous validate/commit/push/PR/auto-merge workflow
 ├── .github/                    # GitHub templates and Actions
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md
@@ -128,7 +131,7 @@ The executable JAR is produced at `target/hello-world-1.0.0.jar`.
 java -jar target/hello-world-1.0.0.jar
 ```
 
-Expected output:
+Expected output (exact greeting text depends on `HelloWorld.DEFAULT_GREETING`):
 
 ```
 [2026-07-01 10:00:00] [INFO ] [com.harness.helloworld.App] Application starting
@@ -162,7 +165,9 @@ Quick start:
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md). AI agents working in this repo may use the `/ship`
+command to autonomously validate, commit, push, open a PR, and enable auto-merge — see
+[CLAUDE.md](CLAUDE.md)'s "Automation & Approval Policy" and [AGENTS.md](AGENTS.md).
 
 ---
 

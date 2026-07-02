@@ -50,6 +50,28 @@ run in the Harness pipeline post-push.
 - Commit with a Conventional Commits message: `<type>(<scope>): <subject>`, body explaining *why*.
 - Push with `git push -u origin <branch>`.
 
+### If the push is rejected (branch has diverged)
+
+`git fetch` the branch and reconcile before retrying. Prefer `git merge` once a PR already exists for this
+branch (rewriting pushed/reviewed history via rebase is riskier); a plain `git rebase` is fine for commits
+that were never pushed. This happens routinely after a squash-merge: GitHub's squash creates a new commit on
+`main` that git doesn't recognize as containing the feature branch's own (now-superseded) commits, so the
+next PR off the same branch shows a conflict even though there's no real content disagreement.
+
+**Guarded auto-resolve** -- when `git merge`/`rebase` reports `CONFLICT`, inspect every conflicting hunk
+before touching anything:
+
+- **Auto-resolve (keep the local/HEAD side) only if** the conflict is a literal value mismatch in a source or
+  test file, where the local side is this branch's own newer intentional change and the incoming side is
+  simply the older value the base branch already had before this branch's change was made (e.g. a stale
+  test-expectation constant left over from a squash-merge divergence). Verify with `grep` after resolving --
+  confirm every occurrence of the old value is gone and the new value is consistent across prod code and
+  tests -- then re-run step 3's full validation before committing the merge.
+- **Stop and ask in every other case**: conflicts touching logic, imports, structure, config, or anywhere
+  the correct side isn't unambiguous from the diff alone. Report the conflicting files and hunks verbatim
+  rather than guessing -- an automation that resolves a real disagreement by pattern-matching risks silently
+  discarding someone's work, which is worse than pausing.
+
 ## 5. Open the PR
 
 - If `gh` is installed and authenticated (`gh auth status`), run `gh pr create` with:

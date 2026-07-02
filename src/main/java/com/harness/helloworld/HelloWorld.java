@@ -5,7 +5,7 @@ package com.harness.helloworld;
  */
 public class HelloWorld {
 
-    private static final String DEFAULT_GREETING = "Hello 888";
+    private static final String DEFAULT_GREETING = "Hello boys..";
 
     /**
      * Returns the default greeting.

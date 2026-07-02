@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default greeting updated from "hello 66" to "Hello World!!!"
 - Default greeting updated from "Hello World!!!" to "Hello 77 "
 - Default greeting updated from "Hello 77 " to "Hi, everyone"
+- Default greeting updated from "Hello everyone.." to "Hi, whatsapp..."
 - Pipeline hardened with additional automated quality gates: code coverage
   enforcement (JaCoCo, 60% line minimum), dependency vulnerability scanning
   (OWASP Dependency-Check), and secret detection (Gitleaks)

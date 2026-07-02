@@ -10,21 +10,21 @@ The primary domain class.
 
 #### `getGreeting() → String`
 
-Returns the default greeting string `"Hello everyone"`.
+Returns the default greeting string `"Hello 11111"`.
 
 ```java
 HelloWorld hw = new HelloWorld();
-String msg = hw.getGreeting(); // "Hello everyone"
+String msg = hw.getGreeting(); // "Hello 11111"
 ```
 
 #### `getGreeting(String name) → String`
 
-Returns a personalised greeting. Falls back to `"Hello everyone"` when `name` is `null` or blank.
+Returns a personalised greeting. Falls back to `"Hello 11111"` when `name` is `null` or blank.
 
 ```java
 hw.getGreeting("Harness");   // "Hello, Harness!"
-hw.getGreeting(null);        // "Hello everyone"
-hw.getGreeting("  ");        // "Hello everyone"
+hw.getGreeting(null);        // "Hello 11111"
+hw.getGreeting("  ");        // "Hello 11111"
 hw.getGreeting("  Alice  "); // "Hello, Alice!"
 ```
 

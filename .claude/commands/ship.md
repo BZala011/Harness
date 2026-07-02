@@ -1,82 +1,73 @@
 ---
-description: Validate, commit, push, open/update a PR, and auto-merge once checks pass
+description: Implement a task end-to-end -- branch, code, test, commit, push, PR (and merge once checks pass)
+argument-hint: <task description>
 ---
 
-Run the full autonomous ship workflow for the current branch's changes. Follow these steps
-in order and stop immediately if any step fails — report the failure instead of proceeding.
+Task: $ARGUMENTS
 
-## 1. Validate
+Follow this repo's conventions in `CLAUDE.md` throughout (package structure, style, changelog, commit format,
+and the list of files that need explicit confirmation before editing: `.harness/pipeline.yaml`, `pom.xml`,
+`LICENSE`).
 
-```bash
-mvn --batch-mode clean verify
-```
+## 1. Understand and branch
 
-This runs compile, unit tests, Checkstyle, and the JaCoCo coverage gate (60% line minimum).
-Do not skip this even if you believe the change is trivial. If it fails, fix the root cause
-and re-run — do not weaken the gate to make it pass.
+- Read the task and inspect the relevant existing code before changing anything.
+- Create a feature branch off an up-to-date `main` (`git checkout main && git pull && git checkout -b <type>/<short-name>`),
+  using a Conventional Commits type prefix (`feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `style`).
+- If the task is clearly two unrelated concerns, split it into separate branches/PRs rather than bundling them.
 
-`OWASP Dependency-Check` is intentionally excluded from the local run (needs `NVD_API_KEY`
-and a multi-minute first-run database sync) — it runs in the Harness pipeline instead.
+## 2. Implement
 
-## 2. AI code review
+- Make the minimal, purposeful change the task calls for -- no speculative abstractions, no unrelated cleanup.
+- Add or update unit tests in `src/test/` alongside the change (happy path + edge cases).
+- Update every doc whose claims the change invalidates: `README.md`, `API.md`, `TESTING.md`. Grep for the old
+  value/behavior across `*.md` before assuming you found every reference.
+- Add an entry under `## [Unreleased]` in `CHANGELOG.md` (`### Added` / `### Changed` / `### Fixed` as appropriate).
 
-Invoke `/code-review` (medium effort) against the working diff. Treat any CONFIRMED
-correctness finding as a blocker: fix it and re-run step 1. PLAUSIBLE findings should be
-judged, not auto-applied blindly. Do not proceed to commit while a confirmed bug is open.
+## 3. Validate locally -- fix and retry on failure
 
-## 3. Commit
-
-Stage only the files relevant to this change (never `git add -A`). Write a Conventional
-Commit message (`<type>(<scope>): <subject>`, matching the format in `CLAUDE.md` /
-`CONTRIBUTING.md`). Do not include the Claude co-author trailer unless the user's global
-git commit conventions elsewhere in this session already call for it.
-
-## 4. Push
-
-Push the current feature branch to `origin` with `-u` if it has no upstream yet. Never
-push directly to `main`.
-
-## 5. Create or update the Pull Request
+Run, in order, fixing root causes and re-running only what's needed until everything is green (cap at 3 fix
+attempts per gate; if still failing, stop and report the actual error rather than working around it):
 
 ```bash
-gh pr view --json number,state 2>/dev/null
+mvn -q clean verify        # compiles, runs unit tests, Checkstyle, JaCoCo coverage gate (60% line minimum)
 ```
 
-If no PR exists for this branch, create one:
+Do not skip tests (`-DskipTests`) or lower the coverage/style gate to make it pass -- fix the actual issue.
+Do not run the OWASP Dependency-Check or Gitleaks scans locally (they're slow / need cached NVD data); those
+run in the Harness pipeline post-push.
 
-```bash
-gh pr create --fill --base main
-```
+## 4. Commit and push
 
-If a PR already exists, just let the push above update it (GitHub does this automatically)
-— no extra command needed unless the title/body needs revising, in which case use
-`gh pr edit`.
+- Stage only the files you intentionally changed (never `git add -A`).
+- Commit with a Conventional Commits message: `<type>(<scope>): <subject>`, body explaining *why*.
+- Push with `git push -u origin <branch>`.
 
-## 6. Enable checks + auto-merge
+## 5. Open the PR
 
-```bash
-gh pr merge --auto --squash
-```
+- If `gh` is installed and authenticated (`gh auth status`), run `gh pr create` with:
+  - A title matching the commit subject.
+  - A body with: Summary (bullets of what/why), files changed, local test results (`mvn verify` outcome),
+    and a Test Plan checklist. Note that Dependency-Check/Gitleaks/coverage results come from the CI run,
+    not local execution -- link to the pipeline run once it's live rather than fabricating results.
+- If `gh` is unavailable or unauthenticated, do not fabricate a PR: report the pushed branch name, the
+  compare URL (`https://github.com/<org>/<repo>/compare/main...<branch>`), and the PR body text so the user
+  can paste it manually.
 
-This does **not** merge immediately — it tells GitHub to merge automatically the moment all
-required status checks (GitHub Actions `CI`, and the Harness pipeline check if wired to
-branch protection) report success. If `gh pr merge --auto` errors because auto-merge isn't
-enabled on the repo, run once (idempotent, safe to repeat):
+## 6. Merge -- only when it's real
 
-```bash
-gh repo edit --enable-auto-merge
-```
+Per the standing project policy: automated merge to `main` is authorized once required CI checks pass (no
+separate human approval needed for merge itself). Production deployment always requires a human approval step
+-- never wire this command to trigger a production deploy.
 
-## 7. Report
+- Only attempt `gh pr merge --squash --auto` if `gh` succeeded in step 5 and the PR exists.
+- Never force-merge past a failing or pending required check.
+- After merge, delete the remote feature branch (`git push origin --delete <branch>`) but leave the local
+  branch for the user to clean up.
+- If `gh` isn't available, stop after step 5 and tell the user the branch/PR is ready for manual merge --
+  do not claim a merge happened.
 
-Tell the user: what was committed, the PR URL, and that merge is now pending on CI —
-do not claim the merge already happened unless `gh pr view --json state` confirms `MERGED`.
+## Reporting
 
-## Hard stops — never automate these
-
-- **Force-push, history rewrite, or branch deletion** — always ask first.
-- **Production deployment** — there is no prod pipeline in this repo today; if one is ever
-  added, it always requires an explicit human approval step, never auto-merge/auto-deploy.
-- **Editing `.harness/pipeline.yaml` or `pom.xml`** as a side effect of a routine `/ship`
-  run — those stay behind an explicit ask per `CLAUDE.md`, even though this command itself
-  was authorized to add supporting automation around them.
+End with a short summary: branch name, what changed, local validation result, and PR link (or the manual
+fallback info from step 5) -- not a restatement of every command you ran.
